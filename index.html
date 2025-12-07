@@ -1,0 +1,254 @@
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Jaxon</title>
+    <link rel="preconnect" href="https://fonts.googleapis.com">
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+    <link href="https://fonts.googleapis.com/css2?family=Outfit:wght@300;400;500;600&display=swap" rel="stylesheet">
+    <link rel="stylesheet" href="index.css">
+    <script type="module" src="https://unpkg.com/ionicons@7.1.0/dist/ionicons/ionicons.esm.js"></script>
+    <script nomodule src="https://unpkg.com/ionicons@7.1.0/dist/ionicons/ionicons.js"></script>
+</head>
+
+<body>
+
+    <div class="app-container">
+
+        <!-- Sidebar Navigation -->
+        <aside class="sidebar" id="sidebar">
+            <div class="sidebar-header">
+                <h2>Menu</h2>
+                <button class="icon-btn close-sidebar-btn" id="close-sidebar">
+                    <ion-icon name="close-outline"></ion-icon>
+                </button>
+            </div>
+
+            <nav class="sidebar-nav">
+                <button class="nav-item new-chat-btn" id="new-chat-btn">
+                    <ion-icon name="add-outline"></ion-icon>
+                    New Chat
+                </button>
+
+                <div class="chat-history-section">
+                    <span class="section-label">Recent Chats</span>
+                    <div class="chat-history-list" id="chat-history-list">
+                        <!-- Chat items injected here -->
+                    </div>
+                </div>
+
+                <div class="nav-divider"></div>
+
+                <button class="nav-item active" data-view="chat">
+                    <ion-icon name="chatbubble-ellipses-outline"></ion-icon>
+                    Chat
+                </button>
+                <button class="nav-item" data-view="personality">
+                    <ion-icon name="person-outline"></ion-icon>
+                    Personality
+                </button>
+                <button class="nav-item" data-view="memory">
+                    <ion-icon name="book-outline"></ion-icon>
+                    Memory
+                </button>
+                <button class="nav-item" data-view="settings">
+                    <ion-icon name="settings-outline"></ion-icon>
+                    Settings
+                </button>
+            </nav>
+
+            <div class="sidebar-footer">
+                <button class="nav-item" id="theme-btn">
+                    <ion-icon name="moon-outline"></ion-icon>
+                    Theme
+                </button>
+                <button class="nav-item" id="export-btn">
+                    <ion-icon name="download-outline"></ion-icon>
+                    Export Data
+                </button>
+            </div>
+        </aside>
+
+        <div class="main-content">
+            <!-- Header -->
+            <header class="top-bar">
+                <button class="icon-btn" id="open-sidebar" aria-label="Menu">
+                    <ion-icon name="albums-outline"></ion-icon>
+                </button>
+                <div class="connection-status">
+                    <span class="status-dot"></span>
+                </div>
+            </header>
+
+            <!-- VIEWS -->
+
+            <!-- View: Chat -->
+            <main class="view-panel active" id="view-chat">
+                <div class="chat-area" id="chat-area">
+                    <div class="empty-state">
+                        <h1 class="hero-text">What can I help with?</h1>
+                    </div>
+
+                    <div class="messages-container" id="messages-container" style="display: none;">
+                        <!-- Messages injected here -->
+                    </div>
+                </div>
+
+                <!-- Input Area (Only visible in chat view) -->
+                <div class="input-wrapper">
+                    <div class="suggestions-container" id="suggestions">
+                        <button class="chip">What's causing this error?</button>
+                        <button class="chip">Is contrast strong enough?</button>
+                        <button class="chip">Optimize my workflow</button>
+                    </div>
+
+                    <div class="input-card">
+                        <textarea id="prompt-input" placeholder="Ask anything" rows="1"></textarea>
+
+                        <div class="input-actions">
+                            <div class="action-left">
+                                <button class="action-btn" aria-label="Attach">
+                                    <ion-icon name="attach-outline"></ion-icon>
+                                </button>
+                                <button class="action-btn" aria-label="Web Search">
+                                    <ion-icon name="globe-outline"></ion-icon>
+                                </button>
+                            </div>
+                            <button class="send-btn" id="send-btn" aria-label="Send">
+                                <ion-icon name="arrow-up"></ion-icon>
+                            </button>
+                        </div>
+                    </div>
+                    <p class="disclaimer">AI can make mistakes. Please double-check responses.</p>
+                </div>
+            </main>
+
+            <!-- View: Personality -->
+            <section class="view-panel" id="view-personality">
+                <div class="panel-content">
+                    <h1>Personality</h1>
+                    <p class="panel-desc">Choose Jaxon's personality or create a custom one.</p>
+
+                    <div class="preset-section">
+                        <label>Preset Personalities</label>
+                        <div class="preset-cards" id="personality-presets">
+                            <button class="preset-card active" data-preset="romantic">
+                                <ion-icon name="heart-outline"></ion-icon>
+                                <span>Romantic Partner</span>
+                            </button>
+                            <button class="preset-card" data-preset="career">
+                                <ion-icon name="briefcase-outline"></ion-icon>
+                                <span>Career Coach</span>
+                            </button>
+                            <button class="preset-card" data-preset="study">
+                                <ion-icon name="school-outline"></ion-icon>
+                                <span>Study Buddy</span>
+                            </button>
+                            <button class="preset-card" data-preset="creative">
+                                <ion-icon name="color-palette-outline"></ion-icon>
+                                <span>Creative Muse</span>
+                            </button>
+                        </div>
+                    </div>
+
+                    <div class="custom-section">
+                        <label>Custom Instructions (Optional)</label>
+                        <textarea id="personality-input" class="large-input"
+                            placeholder="Add extra instructions for Jaxon..."></textarea>
+                    </div>
+
+                    <button class="save-btn" id="save-personality">Save Changes</button>
+                </div>
+            </section>
+
+            <!-- View: Memory -->
+            <section class="view-panel" id="view-memory">
+                <div class="panel-content">
+                    <h1>Memory</h1>
+                    <p class="panel-desc">Import memories or manage what Jaxon remembers about you.</p>
+
+                    <!-- Import Section -->
+                    <div class="memory-section">
+                        <label>Add New Memories</label>
+                        <textarea id="memory-input" class="large-input"
+                            placeholder="Type facts about yourself (one per line)..."></textarea>
+                        <div class="memory-actions">
+                            <button class="save-btn" id="save-memory">
+                                <ion-icon name="cloud-upload-outline"></ion-icon>
+                                Save to Memory
+                            </button>
+                            <label class="file-upload-btn">
+                                <ion-icon name="document-outline"></ion-icon>
+                                Import File
+                                <input type="file" id="memory-file-input" accept=".json,.txt" hidden>
+                            </label>
+                        </div>
+                    </div>
+
+                    <!-- Recent Memories -->
+                    <div class="memory-section">
+                        <div class="section-header">
+                            <label>Recent Memories</label>
+                            <button class="text-btn" id="refresh-memories">
+                                <ion-icon name="refresh-outline"></ion-icon>
+                                Refresh
+                            </button>
+                        </div>
+                        <div class="memories-list" id="memories-list">
+                            <p class="empty-hint">No memories loaded. Click Refresh to fetch from Mem0.</p>
+                        </div>
+                    </div>
+
+                    <!-- Undo Section -->
+                    <div class="undo-toast" id="undo-toast" hidden>
+                        <span>Memory deleted</span>
+                        <button class="undo-btn" id="undo-delete-btn">Undo</button>
+                    </div>
+                </div>
+            </section>
+
+            <!-- View: Settings -->
+            <section class="view-panel" id="view-settings">
+                <div class="panel-content">
+                    <h1>Settings</h1>
+
+                    <div class="setting-group">
+                        <label>OpenAI API Key</label>
+                        <input type="password" id="api-key-input" class="text-input" placeholder="sk-...">
+                        <p class="hint">Saved locally in your browser.</p>
+                    </div>
+
+                    <div class="setting-group">
+                        <label>Display Name</label>
+                        <input type="text" id="username-input" class="text-input" placeholder="User">
+                    </div>
+
+                    <div class="setting-group">
+                        <div class="toggle-row">
+                            <label>Dark Mode</label>
+                            <label class="switch">
+                                <input type="checkbox" id="dark-mode-toggle">
+                                <span class="slider round"></span>
+                            </label>
+                        </div>
+                    </div>
+
+                    <div class="setting-group">
+                        <button class="danger-btn" id="clear-data-btn">Clear All Data</button>
+                    </div>
+                </div>
+            </section>
+
+        </div>
+
+        <!-- Overlay for mobile sidebar -->
+        <div class="overlay" id="overlay"></div>
+
+    </div>
+
+    <script src="script.js"></script>
+</body>
+
+</html>
