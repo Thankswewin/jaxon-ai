@@ -178,7 +178,8 @@ body {
 
 /* WhatsApp-style Background Pattern */
 /* WhatsApp-style Background Pattern - Applied to Main Content Container */
-.main-content::before {
+.main-content::before,
+.top-bar::before {
     content: "";
     position: absolute;
     top: 0;
@@ -194,7 +195,8 @@ body {
     mix-blend-mode: multiply;
 }
 
-[data-theme='dark'] .main-content::before {
+[data-theme='dark'] .main-content::before,
+[data-theme='dark'] .top-bar::before {
     opacity: 0.2;
     /* Significantly more visible */
     filter: invert(1);
