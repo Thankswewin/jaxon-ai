@@ -300,6 +300,7 @@ document.addEventListener('DOMContentLoaded', () => {
 
         // Show typing indicator
         const typingId = showTypingIndicator();
+        const startTime = Date.now(); // Track response time
 
         try {
             const personality = PERSONALITY_PRESETS[state.personalityPreset] +
@@ -320,9 +321,10 @@ document.addEventListener('DOMContentLoaded', () => {
             if (!response.ok) throw new Error(`Server error: ${response.status}`);
 
             const data = await response.json();
+            const responseTime = ((Date.now() - startTime) / 1000).toFixed(2); // Calculate response time
             chat.messages.push({ text: data.response, sender: 'bot', timestamp: new Date().toISOString() });
             saveState();
-            typeMessage(data.response, 'bot');
+            typeMessage(data.response, 'bot', responseTime);
         } catch (error) {
             removeTypingIndicator(typingId);
             console.error('Chat error:', error);
@@ -349,7 +351,7 @@ document.addEventListener('DOMContentLoaded', () => {
         if (el) el.remove();
     }
 
-    function typeMessage(text, sender) {
+    function typeMessage(text, sender, responseTime = null) {
         const msgDiv = document.createElement('div');
         msgDiv.className = `message ${sender}`;
         const bubble = document.createElement('div');
@@ -381,6 +383,11 @@ document.addEventListener('DOMContentLoaded', () => {
 
                 setTimeout(type, speed);
             } else {
+                // Typing complete - add action bar for bot messages
+                if (sender === 'bot') {
+                    const actionBar = createMessageActionBar(text, responseTime);
+                    msgDiv.appendChild(actionBar);
+                }
                 // Final scroll when complete (only if at bottom)
                 if (isUserAtBottom()) {
                     scrollToBottom();
@@ -388,6 +395,89 @@ document.addEventListener('DOMContentLoaded', () => {
             }
         }
         type();
+    }
+
+    function createMessageActionBar(text, responseTime) {
+        const actionBar = document.createElement('div');
+        actionBar.className = 'message-actions';
+
+        // Action buttons
+        const actions = [
+            { icon: 'copy-outline', title: 'Copy', action: () => copyToClipboard(text) },
+            { icon: 'thumbs-up-outline', title: 'Like', action: (e) => toggleReaction(e, 'like') },
+            { icon: 'thumbs-down-outline', title: 'Dislike', action: (e) => toggleReaction(e, 'dislike') },
+            { icon: 'volume-high-outline', title: 'Read aloud', action: () => speakText(text) },
+            { icon: 'refresh-outline', title: 'Regenerate', action: () => regenerateResponse() }
+        ];
+
+        actions.forEach(({ icon, title, action }) => {
+            const btn = document.createElement('button');
+            btn.className = 'msg-action-btn';
+            btn.title = title;
+            btn.innerHTML = `<ion-icon name="${icon}"></ion-icon>`;
+            btn.addEventListener('click', action);
+            actionBar.appendChild(btn);
+        });
+
+        // Response info (time)
+        if (responseTime) {
+            const info = document.createElement('span');
+            info.className = 'response-info';
+            info.textContent = `${responseTime}s`;
+            actionBar.appendChild(info);
+        }
+
+        return actionBar;
+    }
+
+    function copyToClipboard(text) {
+        navigator.clipboard.writeText(text).then(() => {
+            showToast('Copied to clipboard ✓');
+        }).catch(() => {
+            showToast('Failed to copy');
+        });
+    }
+
+    function toggleReaction(e, type) {
+        const btn = e.currentTarget;
+        btn.classList.toggle('active');
+        if (btn.classList.contains('active')) {
+            showToast(type === 'like' ? '👍 Thanks for the feedback!' : '👎 Thanks for the feedback!');
+        }
+    }
+
+    function speakText(text) {
+        if ('speechSynthesis' in window) {
+            // Cancel any ongoing speech
+            window.speechSynthesis.cancel();
+            const utterance = new SpeechSynthesisUtterance(text);
+            utterance.rate = 1;
+            utterance.pitch = 1;
+            window.speechSynthesis.speak(utterance);
+            showToast('🔊 Reading aloud...');
+        } else {
+            showToast('Text-to-speech not supported');
+        }
+    }
+
+    function regenerateResponse() {
+        const chat = getActiveChat();
+        if (!chat || chat.messages.length < 2) return;
+
+        // Get the last user message
+        const lastUserMsgIndex = chat.messages.map(m => m.sender).lastIndexOf('user');
+        if (lastUserMsgIndex === -1) return;
+
+        const lastUserMsg = chat.messages[lastUserMsgIndex].text;
+
+        // Remove last bot message
+        chat.messages.pop();
+        saveState();
+        renderActiveChat();
+
+        // Re-send the last user message
+        textarea.value = lastUserMsg;
+        handleSend();
     }
 
     function renderMessage(text, sender) {

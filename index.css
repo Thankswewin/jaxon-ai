@@ -542,6 +542,63 @@ input:checked+.slider:before {
     margin-bottom: 2rem;
 }
 
+/* Message Action Bar */
+.message-actions {
+    display: flex;
+    align-items: center;
+    gap: 0.25rem;
+    margin-top: 0.5rem;
+    padding-left: 0.25rem;
+    opacity: 0;
+    transition: opacity 0.2s ease;
+}
+
+.message:hover .message-actions,
+.message-actions:focus-within {
+    opacity: 1;
+}
+
+/* Always show on touch devices */
+@media (hover: none) {
+    .message-actions {
+        opacity: 1;
+    }
+}
+
+.msg-action-btn {
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    width: 32px;
+    height: 32px;
+    border: none;
+    background: transparent;
+    color: var(--text-secondary);
+    cursor: pointer;
+    border-radius: 8px;
+    transition: all 0.2s ease;
+}
+
+.msg-action-btn:hover {
+    background: var(--accent-color);
+    color: var(--text-primary);
+}
+
+.msg-action-btn.active {
+    color: #4CAF50;
+}
+
+.msg-action-btn ion-icon {
+    font-size: 1.1rem;
+}
+
+.response-info {
+    margin-left: auto;
+    font-size: 0.75rem;
+    color: var(--text-secondary);
+    opacity: 0.7;
+}
+
 .message.user {
     align-items: flex-end;
 }
