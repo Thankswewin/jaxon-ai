@@ -92,11 +92,69 @@ document.addEventListener('DOMContentLoaded', () => {
         // Personality Presets
         applyPersonalityPreset();
 
+        // Dynamic Suggestions
+        renderSuggestions();
+
         // Chat History Sidebar
         renderChatHistory();
 
         // Active Chat Messages
         renderActiveChat();
+    }
+
+    // ========== SMART SUGGESTIONS ==========
+    const PERSONALITY_SUGGESTIONS = {
+        romantic: [
+            "How was your day, love? 💕",
+            "Tell me something sweet",
+            "I need some encouragement",
+            "What do you love about me?",
+            "Can we talk about our future?"
+        ],
+        career: [
+            "Review my resume",
+            "Help me prepare for an interview",
+            "What skills should I develop?",
+            "How do I ask for a raise?",
+            "Career path advice"
+        ],
+        study: [
+            "Quiz me on what I'm learning",
+            "Explain this concept simply",
+            "Create a study schedule",
+            "Help me stay focused",
+            "Summarize my notes"
+        ],
+        creative: [
+            "Brainstorm ideas with me",
+            "Help me write something",
+            "Give me creative inspiration",
+            "Critique my work",
+            "Suggest a new project"
+        ]
+    };
+
+    function renderSuggestions() {
+        if (!suggestions) return;
+        suggestions.innerHTML = '';
+
+        // Get relevant suggestions based on personality
+        const presetSuggestions = PERSONALITY_SUGGESTIONS[state.personalityPreset] || PERSONALITY_SUGGESTIONS.romantic;
+
+        // Pick 3 random suggestions
+        const shuffled = [...presetSuggestions].sort(() => 0.5 - Math.random());
+        const selected = shuffled.slice(0, 3);
+
+        selected.forEach(text => {
+            const chip = document.createElement('button');
+            chip.className = 'chip';
+            chip.textContent = text;
+            chip.addEventListener('click', () => {
+                textarea.value = text;
+                handleSend();
+            });
+            suggestions.appendChild(chip);
+        });
     }
 
     function applyTheme() {
@@ -336,6 +394,7 @@ document.addEventListener('DOMContentLoaded', () => {
                 state.personalityPreset = newPreset;
                 saveState();
                 applyPersonalityPreset();
+                renderSuggestions(); // Update suggestions for new personality
 
                 // Show toast notification
                 showToast(`Personality changed to ${presetNames[newPreset] || newPreset}`);
