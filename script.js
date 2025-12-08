@@ -352,12 +352,32 @@ document.addEventListener('DOMContentLoaded', () => {
 
         let i = 0;
         const speed = 15;
+        let lastScrollTime = 0;
+
+        // Check if user is near bottom (within 100px)
+        function isUserAtBottom() {
+            const threshold = 100;
+            return chatArea.scrollHeight - chatArea.scrollTop - chatArea.clientHeight < threshold;
+        }
+
         function type() {
             if (i < text.length) {
                 bubble.textContent += text.charAt(i);
                 i++;
-                scrollToBottom();
+
+                // Only auto-scroll if user is at bottom, and throttle to every 100ms
+                const now = Date.now();
+                if (isUserAtBottom() && now - lastScrollTime > 100) {
+                    scrollToBottom();
+                    lastScrollTime = now;
+                }
+
                 setTimeout(type, speed);
+            } else {
+                // Final scroll when complete (only if at bottom)
+                if (isUserAtBottom()) {
+                    scrollToBottom();
+                }
             }
         }
         type();
