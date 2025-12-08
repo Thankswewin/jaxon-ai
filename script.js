@@ -218,6 +218,11 @@ document.addEventListener('DOMContentLoaded', () => {
         const chat = getActiveChat();
         if (!chat) return;
 
+        // Show messages container (fix for first message)
+        if (emptyState) emptyState.style.display = 'none';
+        if (suggestions) suggestions.style.display = 'none';
+        messagesContainer.style.display = 'flex';
+
         // Add user message
         chat.messages.push({ text, sender: 'user', timestamp: new Date().toISOString() });
         updateChatTitle(chat);

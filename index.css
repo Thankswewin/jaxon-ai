@@ -204,14 +204,16 @@ body {
 }
 
 .top-bar {
-    padding: 1.5rem;
+    padding: 1rem 1.5rem;
     display: flex;
     justify-content: space-between;
     align-items: center;
-    position: relative;
-    /* Removed background-color to let pattern show through, or keep simplified */
-    background: transparent;
-    z-index: 10;
+    position: sticky;
+    top: 0;
+    background: var(--bg-color);
+    z-index: 50;
+    /* Slight border for visual separation */
+    border-bottom: 1px solid var(--border-color);
 }
 
 /* Ensure content is above background */
@@ -251,10 +253,22 @@ body {
 }
 
 /* Ensure content is above background */
-.messages-container,
+.messages-container {
+    position: relative;
+    z-index: 1;
+}
+
+/* Empty State - Centered Hero */
 .empty-state {
     position: relative;
     z-index: 1;
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    justify-content: center;
+    flex: 1;
+    text-align: center;
+    padding: 2rem;
 }
 
 .input-wrapper {
