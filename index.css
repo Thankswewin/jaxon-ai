@@ -33,20 +33,36 @@
     -webkit-font-smoothing: antialiased;
 }
 
+html {
+    /* Enable smooth scrolling that triggers URL bar hiding */
+    height: 100%;
+    height: 100dvh;
+    /* Dynamic viewport height - adjusts when URL bar hides */
+    overflow: hidden;
+}
+
 body {
     background-color: var(--bg-color);
     font-family: 'Outfit', sans-serif;
     color: var(--text-primary);
     display: flex;
-    height: 100vh;
+    height: 100%;
+    height: 100dvh;
+    /* Use dynamic viewport height */
+    min-height: 100dvh;
     overflow: hidden;
     transition: background-color 0.3s ease, color 0.3s ease;
+    /* Smooth momentum scrolling */
+    -webkit-overflow-scrolling: touch;
 }
 
 .app-container {
     width: 100%;
+    height: 100%;
     display: flex;
     position: relative;
+    /* Prevent overscroll bounce that can reveal URL bar */
+    overscroll-behavior: contain;
 }
 
 /* Sidebar */
@@ -171,9 +187,15 @@ body {
     display: flex;
     flex-direction: column;
     overflow-y: auto;
+    overflow-x: hidden;
     padding: 0 1.5rem 180px 1.5rem;
     position: relative;
-    /* Context for background */
+    /* Smooth scrolling for iOS */
+    -webkit-overflow-scrolling: touch;
+    /* Prevent overscroll that can reveal URL bar */
+    overscroll-behavior-y: contain;
+    /* Enable scroll-triggered URL bar hiding */
+    scroll-behavior: smooth;
 }
 
 /* WhatsApp-style Background Pattern */
