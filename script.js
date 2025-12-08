@@ -104,6 +104,13 @@ document.addEventListener('DOMContentLoaded', () => {
 
     // ========== SMART SUGGESTIONS ==========
     const PERSONALITY_SUGGESTIONS = {
+        default: [
+            "Tell me about yourself",
+            "What can you help me with?",
+            "How are you today?",
+            "Share something interesting",
+            "Let's have a conversation"
+        ],
         romantic: [
             "How was your day, love? 💕",
             "Tell me something sweet",
@@ -138,8 +145,8 @@ document.addEventListener('DOMContentLoaded', () => {
         if (!suggestions) return;
         suggestions.innerHTML = '';
 
-        // Get relevant suggestions based on personality
-        const presetSuggestions = PERSONALITY_SUGGESTIONS[state.personalityPreset] || PERSONALITY_SUGGESTIONS.romantic;
+        // Get relevant suggestions based on personality (fallback to default)
+        const presetSuggestions = PERSONALITY_SUGGESTIONS[state.personalityPreset] || PERSONALITY_SUGGESTIONS.default;
 
         // Pick 3 random suggestions
         const shuffled = [...presetSuggestions].sort(() => 0.5 - Math.random());
@@ -403,7 +410,7 @@ document.addEventListener('DOMContentLoaded', () => {
         personalityPresets.addEventListener('click', (e) => {
             const card = e.target.closest('.preset-card');
             if (card) {
-                const newPreset = card.dataset.preset;
+                const clickedPreset = card.dataset.preset;
                 const presetNames = {
                     romantic: '💕 Romantic Partner',
                     career: '💼 Career Coach',
@@ -411,13 +418,20 @@ document.addEventListener('DOMContentLoaded', () => {
                     creative: '🎨 Creative Muse'
                 };
 
-                state.personalityPreset = newPreset;
-                saveState();
-                applyPersonalityPreset();
-                renderSuggestions(); // Update suggestions for new personality
-
-                // Show toast notification
-                showToast(`Personality changed to ${presetNames[newPreset] || newPreset}`);
+                // Toggle: if clicking same preset, deactivate it
+                if (state.personalityPreset === clickedPreset) {
+                    state.personalityPreset = null; // Deactivate
+                    saveState();
+                    applyPersonalityPreset();
+                    renderSuggestions();
+                    showToast('Personality deactivated - using default Jaxon');
+                } else {
+                    state.personalityPreset = clickedPreset;
+                    saveState();
+                    applyPersonalityPreset();
+                    renderSuggestions();
+                    showToast(`Personality changed to ${presetNames[clickedPreset] || clickedPreset}`);
+                }
             }
         });
     }
