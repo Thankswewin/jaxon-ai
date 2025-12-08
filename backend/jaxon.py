@@ -11,9 +11,12 @@ mem0_client = MemoryClient(api_key=os.getenv("MEM0_API_KEY"))
 openai.api_key = os.getenv("OPENAI_API_KEY")
 user_id = os.getenv("USER_ID", "jaxon_user")
 
-def get_response(user_input, user_id=user_id, history=None, personality=None):
+def get_response(user_input, user_id=user_id, history=None, personality=None, api_key=None):
     if history is None:
         history = []
+
+    # Use provided API key or fallback to environment variable
+    openai.api_key = api_key or os.getenv("OPENAI_API_KEY")
 
     # Search memory for relevant context
     print("Thinking (Searching Memory)...")

@@ -243,7 +243,11 @@ document.addEventListener('DOMContentLoaded', () => {
             const response = await fetch(`${API_URL}/chat`, {
                 method: 'POST',
                 headers: { 'Content-Type': 'application/json' },
-                body: JSON.stringify({ message: text, personality })
+                body: JSON.stringify({
+                    message: text,
+                    personality,
+                    apiKey: state.apiKey || null
+                })
             });
 
             removeTypingIndicator(typingId);
