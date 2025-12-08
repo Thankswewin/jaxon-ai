@@ -403,7 +403,7 @@ document.addEventListener('DOMContentLoaded', () => {
 
         // Action buttons
         const actions = [
-            { icon: 'copy-outline', title: 'Copy', action: () => copyToClipboard(text) },
+            { icon: 'copy-outline', title: 'Copy', action: (e) => copyToClipboard(text, e.currentTarget) },
             { icon: 'thumbs-up-outline', title: 'Like', action: (e) => toggleReaction(e, 'like') },
             { icon: 'thumbs-down-outline', title: 'Dislike', action: (e) => toggleReaction(e, 'dislike') },
             { icon: 'volume-high-outline', title: 'Read aloud', action: () => speakText(text) },
@@ -430,9 +430,19 @@ document.addEventListener('DOMContentLoaded', () => {
         return actionBar;
     }
 
-    function copyToClipboard(text) {
+    function copyToClipboard(text, btn) {
         navigator.clipboard.writeText(text).then(() => {
-            showToast('Copied to clipboard ✓');
+            // Sleek inline animation - change icon to checkmark
+            const icon = btn.querySelector('ion-icon');
+            const originalIcon = icon.getAttribute('name');
+            icon.setAttribute('name', 'checkmark');
+            btn.classList.add('copied');
+
+            // Revert back after 1.5 seconds
+            setTimeout(() => {
+                icon.setAttribute('name', originalIcon);
+                btn.classList.remove('copied');
+            }, 1500);
         }).catch(() => {
             showToast('Failed to copy');
         });

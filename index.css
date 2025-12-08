@@ -588,6 +588,25 @@ input:checked+.slider:before {
     color: #4CAF50;
 }
 
+.msg-action-btn.copied {
+    color: #4CAF50;
+    animation: copyPulse 0.3s ease;
+}
+
+@keyframes copyPulse {
+    0% {
+        transform: scale(1);
+    }
+
+    50% {
+        transform: scale(1.2);
+    }
+
+    100% {
+        transform: scale(1);
+    }
+}
+
 .msg-action-btn ion-icon {
     font-size: 1.1rem;
 }
