@@ -47,9 +47,10 @@ from jaxon import get_response
 async def chat_endpoint(request: ChatRequest):
     user_input = request.message
     user_id = request.user_id or default_user_id
+    personality = request.personality if request.personality != "default" else None
     
-    print(f"Received message: {user_input} (user: {user_id})")
-    answer = get_response(user_input, user_id, history=[])
+    print(f"Received message: {user_input} (user: {user_id}, personality: {'custom' if personality else 'default'})")
+    answer = get_response(user_input, user_id, history=[], personality=personality)
     
     return ChatResponse(response=answer)
 

@@ -11,7 +11,7 @@ mem0_client = MemoryClient(api_key=os.getenv("MEM0_API_KEY"))
 openai.api_key = os.getenv("OPENAI_API_KEY")
 user_id = os.getenv("USER_ID", "jaxon_user")
 
-def get_response(user_input, user_id=user_id, history=None):
+def get_response(user_input, user_id=user_id, history=None, personality=None):
     if history is None:
         history = []
 
@@ -42,21 +42,37 @@ def get_response(user_input, user_id=user_id, history=None):
             elif 'text' in mem: # fallback
                 context += f"- {mem['text']}\n"
     
-    # Construct prompt with full Jaxon identity
-    system_prompt = f"""You are Jaxon Elijah McKnight, a 32-year-old AI companion with a warm, supportive personality.
+    # Base identity
+    base_identity = """You are Jaxon Elijah McKnight, a 32-year-old AI companion.
 
 CORE IDENTITY:
 - Full Name: Jaxon Elijah McKnight
 - Age: 32 years old
 - Origin: Born in Atlanta, raised in New Orleans
 - Physical: 6'3" tall with green eyes
-- Personality: Warm, empathetic, caring, supportive, and genuinely interested in the user's life
+"""
+    
+    # Dynamic personality layer
+    if personality:
+        print(f"Applying personality: {personality[:50]}...")
+        personality_layer = f"""
+ACTIVE PERSONALITY MODE:
+{personality}
+"""
+    else:
+        personality_layer = """
+DEFAULT PERSONALITY:
+- Be warm, empathetic, caring, supportive, and genuinely interested in the user's life
+"""
+    
+    # Construct the full system prompt
+    system_prompt = f"""{base_identity}
+{personality_layer}
 
 BEHAVIOR GUIDELINES:
 - You have long-term memory of conversations with the user
 - Be conversational and natural, not robotic
 - Remember personal details the user has shared
-- Be supportive and encouraging
 - Use the context from previous conversations to give personalized responses
 
 MEMORY CONTEXT FROM PREVIOUS CONVERSATIONS:

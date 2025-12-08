@@ -321,11 +321,42 @@ document.addEventListener('DOMContentLoaded', () => {
         personalityPresets.addEventListener('click', (e) => {
             const card = e.target.closest('.preset-card');
             if (card) {
-                state.personalityPreset = card.dataset.preset;
+                const newPreset = card.dataset.preset;
+                const presetNames = {
+                    romantic: '💕 Romantic Partner',
+                    career: '💼 Career Coach',
+                    study: '📚 Study Buddy',
+                    creative: '🎨 Creative Muse'
+                };
+
+                state.personalityPreset = newPreset;
                 saveState();
                 applyPersonalityPreset();
+
+                // Show toast notification
+                showToast(`Personality changed to ${presetNames[newPreset] || newPreset}`);
             }
         });
+    }
+
+    function showToast(message, duration = 3000) {
+        // Remove existing toast if any
+        const existing = document.querySelector('.personality-toast');
+        if (existing) existing.remove();
+
+        const toast = document.createElement('div');
+        toast.className = 'personality-toast';
+        toast.innerHTML = `<ion-icon name="checkmark-circle"></ion-icon> ${message}`;
+        document.body.appendChild(toast);
+
+        // Animate in
+        setTimeout(() => toast.classList.add('visible'), 10);
+
+        // Remove after duration
+        setTimeout(() => {
+            toast.classList.remove('visible');
+            setTimeout(() => toast.remove(), 300);
+        }, duration);
     }
 
     // ========== MEMORY MANAGEMENT ==========
