@@ -11,7 +11,7 @@ mem0_client = MemoryClient(api_key=os.getenv("MEM0_API_KEY"))
 openai.api_key = os.getenv("OPENAI_API_KEY")
 user_id = os.getenv("USER_ID", "jaxon_user")
 
-def get_response(user_input, user_id=user_id, history=None, personality=None, api_key=None):
+def get_response(user_input, user_id=user_id, history=None, personality=None, api_key=None, image=None):
     if history is None:
         history = []
 
@@ -86,12 +86,29 @@ MEMORY CONTEXT FROM PREVIOUS CONVERSATIONS:
     # Keep last 5 turns for immediate context from history if provided
     if history:
         messages.extend(history[-5:]) 
-    messages.append({"role": "user", "content": user_input})
+    
+    # Construct user message with optional image (multimodal)
+    if image:
+        # Image is a base64 data URL (data:image/jpeg;base64,...)
+        user_message = {
+            "role": "user",
+            "content": [
+                {"type": "text", "text": user_input},
+                {"type": "image_url", "image_url": {"url": image}}
+            ]
+        }
+        model = "gpt-4o-mini"  # Multimodal model
+        print(f"Using vision with image...")
+    else:
+        user_message = {"role": "user", "content": user_input}
+        model = "gpt-4o-mini"  # Standard model
+    
+    messages.append(user_message)
 
     # Generate response
     try:
         response = openai.chat.completions.create(
-            model="gpt-4o", # or gpt-3.5-turbo
+            model=model,
             messages=messages
         )
         answer = response.choices[0].message.content

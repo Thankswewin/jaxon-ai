@@ -36,6 +36,7 @@ class ChatRequest(BaseModel):
     user_id: Optional[str] = None
     personality: Optional[str] = "default"
     apiKey: Optional[str] = None  # User-provided OpenAI API key
+    image: Optional[str] = None  # Base64 image data URL for vision
 
 class ChatResponse(BaseModel):
     response: str
@@ -50,9 +51,10 @@ async def chat_endpoint(request: ChatRequest):
     user_id = request.user_id or default_user_id
     personality = request.personality if request.personality != "default" else None
     api_key = request.apiKey  # User-provided key (or None for fallback)
+    image = request.image  # Image for vision analysis
     
-    print(f"Received message: {user_input} (user: {user_id}, personality: {'custom' if personality else 'default'}, api_key: {'provided' if api_key else 'fallback'})")
-    answer = get_response(user_input, user_id, history=[], personality=personality, api_key=api_key)
+    print(f"Received message: {user_input} (user: {user_id}, personality: {'custom' if personality else 'default'}, api_key: {'provided' if api_key else 'fallback'}, image: {'yes' if image else 'no'})")
+    answer = get_response(user_input, user_id, history=[], personality=personality, api_key=api_key, image=image)
     
     return ChatResponse(response=answer)
 

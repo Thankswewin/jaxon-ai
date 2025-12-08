@@ -312,6 +312,50 @@ body {
     z-index: 50;
 }
 
+/* Image Preview in Input */
+.image-preview-container {
+    position: relative;
+    max-width: 200px;
+    margin-bottom: 0.75rem;
+    border-radius: 12px;
+    overflow: hidden;
+    box-shadow: var(--shadow-soft);
+}
+
+.image-preview-container img {
+    width: 100%;
+    height: auto;
+    max-height: 150px;
+    object-fit: cover;
+    display: block;
+    border-radius: 12px;
+}
+
+.remove-image-btn {
+    position: absolute;
+    top: 4px;
+    right: 4px;
+    background: rgba(0, 0, 0, 0.6);
+    border: none;
+    border-radius: 50%;
+    width: 28px;
+    height: 28px;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    cursor: pointer;
+    color: white;
+    transition: background 0.2s ease;
+}
+
+.remove-image-btn:hover {
+    background: rgba(200, 50, 50, 0.8);
+}
+
+.remove-image-btn ion-icon {
+    font-size: 1.2rem;
+}
+
 /* Common Panel Styles */
 .panel-content {
     max-width: 700px;

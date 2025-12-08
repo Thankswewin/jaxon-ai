@@ -39,6 +39,13 @@ document.addEventListener('DOMContentLoaded', () => {
     const themeBtn = document.getElementById('theme-btn');
     const clearDataBtn = document.getElementById('clear-data-btn');
 
+    // Image Upload Elements
+    const attachBtn = document.getElementById('attach-btn');
+    const imageInput = document.getElementById('image-input');
+    const imagePreviewContainer = document.getElementById('image-preview-container');
+    const imagePreview = document.getElementById('image-preview');
+    const removeImageBtn = document.getElementById('remove-image-btn');
+
     // ========== STATE MANAGEMENT ==========
     let state = {
         apiKey: '',
@@ -51,6 +58,8 @@ document.addEventListener('DOMContentLoaded', () => {
         recentMemories: [],
         deletedMemory: null // For undo
     };
+
+    let pendingImage = null; // Holds base64 image data for sending
 
     const API_URL = 'https://jaxon-ai-production.up.railway.app';
 
@@ -302,6 +311,14 @@ document.addEventListener('DOMContentLoaded', () => {
         const typingId = showTypingIndicator();
         const startTime = Date.now(); // Track response time
 
+        // Capture and clear pending image
+        const imageToSend = pendingImage;
+        if (pendingImage) {
+            pendingImage = null;
+            if (imagePreview) imagePreview.src = '';
+            if (imagePreviewContainer) imagePreviewContainer.hidden = true;
+        }
+
         try {
             const personality = PERSONALITY_PRESETS[state.personalityPreset] +
                 (state.personalityCustom ? '\n\nAdditional instructions: ' + state.personalityCustom : '');
@@ -312,7 +329,8 @@ document.addEventListener('DOMContentLoaded', () => {
                 body: JSON.stringify({
                     message: text,
                     personality,
-                    apiKey: state.apiKey || null
+                    apiKey: state.apiKey || null,
+                    image: imageToSend || null // Include image if present
                 })
             });
 
@@ -797,6 +815,32 @@ document.addEventListener('DOMContentLoaded', () => {
         a.href = dataStr;
         a.download = 'jaxon_data.json';
         a.click();
+    });
+
+    // ========== IMAGE UPLOAD ==========
+    attachBtn?.addEventListener('click', () => {
+        imageInput?.click();
+    });
+
+    imageInput?.addEventListener('change', (e) => {
+        const file = e.target.files[0];
+        if (file && file.type.startsWith('image/')) {
+            const reader = new FileReader();
+            reader.onload = (event) => {
+                pendingImage = event.target.result; // base64 data URL
+                if (imagePreview) imagePreview.src = pendingImage;
+                if (imagePreviewContainer) imagePreviewContainer.hidden = false;
+            };
+            reader.readAsDataURL(file);
+        }
+        // Reset input so same file can be selected again
+        e.target.value = '';
+    });
+
+    removeImageBtn?.addEventListener('click', () => {
+        pendingImage = null;
+        if (imagePreview) imagePreview.src = '';
+        if (imagePreviewContainer) imagePreviewContainer.hidden = true;
     });
 
     setupPersonalityPresets();

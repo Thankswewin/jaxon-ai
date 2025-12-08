@@ -108,13 +108,22 @@
                     </div>
 
                     <div class="input-card">
+                        <!-- Image Preview -->
+                        <div class="image-preview-container" id="image-preview-container" hidden>
+                            <img id="image-preview" src="" alt="Preview">
+                            <button class="remove-image-btn" id="remove-image-btn" aria-label="Remove image">
+                                <ion-icon name="close-circle"></ion-icon>
+                            </button>
+                        </div>
+
                         <textarea id="prompt-input" placeholder="Ask anything" rows="1"></textarea>
 
                         <div class="input-actions">
                             <div class="action-left">
-                                <button class="action-btn" aria-label="Attach">
+                                <button class="action-btn" id="attach-btn" aria-label="Attach">
                                     <ion-icon name="attach-outline"></ion-icon>
                                 </button>
+                                <input type="file" id="image-input" accept="image/*" hidden>
                                 <button class="action-btn" aria-label="Web Search">
                                     <ion-icon name="globe-outline"></ion-icon>
                                 </button>
