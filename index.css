@@ -178,8 +178,7 @@ body {
 
 /* WhatsApp-style Background Pattern */
 /* WhatsApp-style Background Pattern - Applied to Main Content Container */
-.main-content::before,
-.top-bar::before {
+.main-content::before {
     content: "";
     position: absolute;
     top: 0;
@@ -195,8 +194,7 @@ body {
     mix-blend-mode: multiply;
 }
 
-[data-theme='dark'] .main-content::before,
-[data-theme='dark'] .top-bar::before {
+[data-theme='dark'] .main-content::before {
     opacity: 0.2;
     /* Significantly more visible */
     filter: invert(1);
@@ -206,16 +204,13 @@ body {
 }
 
 .top-bar {
-    padding: 1rem 1.5rem;
+    padding: 1.5rem;
     display: flex;
     justify-content: space-between;
     align-items: center;
-    position: sticky;
-    top: 0;
-    background: var(--bg-color);
-    z-index: 50;
-    /* Slight border for visual separation */
-    border-bottom: 1px solid var(--border-color);
+    position: relative;
+    background: transparent;
+    z-index: 10;
 }
 
 /* Ensure content is above background */
@@ -888,4 +883,49 @@ textarea {
     color: #4CAF50;
     font-weight: 600;
     cursor: pointer;
+}
+
+/* Mobile Optimizations - Floating Menu Button */
+@media (max-width: 768px) {
+    #open-sidebar {
+        position: fixed;
+        top: 1rem;
+        left: 1rem;
+        z-index: 1000;
+        /* High z-index to stay above everything */
+        background: var(--surface-color);
+        padding: 0.5rem;
+        border-radius: 50%;
+        box-shadow: 0 4px 12px rgba(0, 0, 0, 0.15);
+        display: flex;
+        align-items: center;
+        justify-content: center;
+        width: 44px;
+        height: 44px;
+        border: 1px solid var(--border-color);
+        transition: background 0.3s ease;
+    }
+
+    #open-sidebar:active {
+        transform: scale(0.95);
+    }
+
+    /* Adjust chat padding so content isn't hidden behind the floating button */
+    .top-bar {
+        justify-content: flex-end;
+        /* Push status to right since left is taken */
+        padding-top: 1rem;
+        /* Restore padding */
+        pointer-events: none;
+        /* Let clicks pass through empty bar area */
+        /* Make sure it's not sticky/blocking */
+        position: relative;
+        background: transparent;
+        border-bottom: none;
+    }
+
+    .top-bar>* {
+        pointer-events: auto;
+        /* Re-enable pointer events for children */
+    }
 }
