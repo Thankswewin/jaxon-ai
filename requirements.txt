@@ -1,0 +1,10 @@
+# Jaxon AI Backend Dependencies
+# This file is at root for Railway/Nixpacks detection
+# Actual backend code is in ./backend
+
+mem0ai
+openai
+fastapi
+uvicorn[standard]
+python-dotenv
+pydantic
