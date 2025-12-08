@@ -460,7 +460,14 @@ document.addEventListener('DOMContentLoaded', () => {
 
     function speakText(text, btn) {
         if ('speechSynthesis' in window) {
-            // Cancel any ongoing speech
+            // Toggle: if already speaking (button active), stop it
+            if (btn && btn.classList.contains('active')) {
+                window.speechSynthesis.cancel();
+                btn.classList.remove('active');
+                return;
+            }
+
+            // Cancel any other ongoing speech
             window.speechSynthesis.cancel();
 
             // Visual feedback - show active while speaking
