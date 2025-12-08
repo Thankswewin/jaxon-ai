@@ -517,7 +517,13 @@ input:checked+.slider:before {
     padding: 1rem 1.25rem;
     border-radius: 1.25rem;
     font-size: 1rem;
-    line-height: 1.5;
+    line-height: 1.6;
+    max-width: 100%;
+    /* Bot messages use full width */
+}
+
+/* User messages stay narrower and right-aligned */
+.message.user .bubble {
     max-width: 85%;
 }
 
