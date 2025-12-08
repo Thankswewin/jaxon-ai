@@ -52,7 +52,7 @@ document.addEventListener('DOMContentLoaded', () => {
         deletedMemory: null // For undo
     };
 
-    const API_URL = 'http://localhost:8000';
+    const API_URL = 'https://jaxon-ai-production.up.railway.app';
 
     // Personality Preset Definitions
     const PERSONALITY_PRESETS = {
