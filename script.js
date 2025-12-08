@@ -354,9 +354,9 @@ document.addEventListener('DOMContentLoaded', () => {
         const speed = 15;
         let lastScrollTime = 0;
 
-        // Check if user is near bottom (within 100px)
+        // Check if user is at absolute bottom (within 10px - very strict)
         function isUserAtBottom() {
-            const threshold = 100;
+            const threshold = 10; // Only auto-scroll if truly at the end
             return chatArea.scrollHeight - chatArea.scrollTop - chatArea.clientHeight < threshold;
         }
 
