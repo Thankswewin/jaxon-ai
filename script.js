@@ -406,7 +406,7 @@ document.addEventListener('DOMContentLoaded', () => {
             { icon: 'copy-outline', title: 'Copy', action: (e) => copyToClipboard(text, e.currentTarget) },
             { icon: 'thumbs-up-outline', title: 'Like', action: (e) => toggleReaction(e, 'like') },
             { icon: 'thumbs-down-outline', title: 'Dislike', action: (e) => toggleReaction(e, 'dislike') },
-            { icon: 'volume-high-outline', title: 'Read aloud', action: () => speakText(text) },
+            { icon: 'volume-high-outline', title: 'Read aloud', action: (e) => speakText(text, e.currentTarget) },
             { icon: 'refresh-outline', title: 'Regenerate', action: () => regenerateResponse() }
         ];
 
@@ -450,23 +450,33 @@ document.addEventListener('DOMContentLoaded', () => {
 
     function toggleReaction(e, type) {
         const btn = e.currentTarget;
+        const icon = btn.querySelector('ion-icon');
+
+        // Toggle active state with animation
         btn.classList.toggle('active');
-        if (btn.classList.contains('active')) {
-            showToast(type === 'like' ? '👍 Thanks for the feedback!' : '👎 Thanks for the feedback!');
-        }
+        btn.classList.add('copied'); // Reuse pulse animation
+        setTimeout(() => btn.classList.remove('copied'), 300);
     }
 
-    function speakText(text) {
+    function speakText(text, btn) {
         if ('speechSynthesis' in window) {
             // Cancel any ongoing speech
             window.speechSynthesis.cancel();
+
+            // Visual feedback - show active while speaking
+            if (btn) {
+                btn.classList.add('active');
+            }
+
             const utterance = new SpeechSynthesisUtterance(text);
             utterance.rate = 1;
             utterance.pitch = 1;
+
+            utterance.onend = () => {
+                if (btn) btn.classList.remove('active');
+            };
+
             window.speechSynthesis.speak(utterance);
-            showToast('🔊 Reading aloud...');
-        } else {
-            showToast('Text-to-speech not supported');
         }
     }
 
