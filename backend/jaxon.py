@@ -108,6 +108,9 @@ def search_local_facts(query, limit=10):
         'korean': ['korea', 'seoul', 'topik', 'gks', 'pusan'],
         'nail': ['nails', 'manicure', 'acrylic', 'nailmuse', 'press-on'],
         'app': ['application', 'software', 'platform', 'sinspeak', 'nailmuse'],
+        'webinar': ['seminar', 'workshop', 'activate green', 'certificate', 'event', 'attended'],
+        'attended': ['webinar', 'seminar', 'event', 'workshop', 'certificate'],
+        'scholarship': ['gks-g', 'gks', 'pusan', 'korea', 'application'],
     }
     
     # Expand keywords with synonyms
@@ -211,12 +214,12 @@ def get_response(user_input, user_id=user_id, history=None, personality=None, ap
         memories = []
     
     # 2. Search local facts for keyword matches (fallback for short queries)
-    local_facts = search_local_facts(user_input, limit=10)
+    local_facts = search_local_facts(user_input, limit=15)
     if local_facts:
         print(f"Retrieved {len(local_facts)} local facts")
     
     # 3. Search full conversation index for deeper context
-    conv_results = search_conversations(user_input, limit=5)
+    conv_results = search_conversations(user_input, limit=10)
     if conv_results:
         print(f"Retrieved {len(conv_results)} conversation matches")
     
